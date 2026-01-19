@@ -105,7 +105,7 @@ export default function HummiGuardAI() {
         throw new Error('Failed to capture frame')
       }
 
-      const response = await fetch('/api/analyze', {
+      const response = await fetch('/hummiguard-ai/api/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -235,7 +235,7 @@ export default function HummiGuardAI() {
             HummiGuard AI
             <span className="text-3xl">🤖</span>
           </h1>
-          <p className="text-purple-300 text-xs">Powered by Claude Vision AI</p>
+          <p className="text-purple-300 text-xs">Developed by Vanshika Tyagi</p>
         </div>
 
         {/* Alert Banner */}

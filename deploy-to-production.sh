@@ -122,52 +122,26 @@ run_remote_command "cd $REMOTE_DIR && npm install --production" || {
   exit 1
 }
 
-# Step 7: Create/update systemd service
-log_message "STEP" "Setting up systemd service..."
-run_remote_command "cat > /etc/systemd/system/$PROJECT_NAME.service << 'EOF'
-[Unit]
-Description=HummiGuard AI Next.js Application
-After=network.target
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=$REMOTE_DIR
-ExecStart=/usr/bin/npm start
-Restart=on-failure
-RestartSec=10
-Environment=NODE_ENV=production
-Environment=PORT=$PORT
-
-[Install]
-WantedBy=multi-user.target
-EOF" || {
-  log_message "WARNING" "Failed to create systemd service file"
-}
-
-# Step 8: Reload systemd and restart service
-log_message "STEP" "Restarting service..."
-run_remote_command "systemctl daemon-reload && systemctl enable $PROJECT_NAME && systemctl restart $PROJECT_NAME" || {
-  log_message "ERROR" "Failed to restart service"
+# Step 7: Restart PM2 process
+log_message "STEP" "Restarting PM2 process..."
+run_remote_command "cd $REMOTE_DIR && pm2 delete $PROJECT_NAME 2>/dev/null || true && pm2 start npm --name '$PROJECT_NAME' -- start && pm2 save" || {
+  log_message "ERROR" "Failed to restart PM2 process"
   exit 1
 }
 
-# Step 9: Check service status
-log_message "STEP" "Checking service status..."
+# Step 8: Check PM2 status
+log_message "STEP" "Checking PM2 status..."
 sleep 3
-run_remote_command "systemctl status $PROJECT_NAME --no-pager" || {
-  log_message "WARNING" "Service may not be running correctly"
+run_remote_command "pm2 list" || {
+  log_message "WARNING" "Could not get PM2 status"
 }
 
-# Step 10: Deployment complete
+# Step 9: Deployment complete
 log_message "INFO" "=========================================="
 log_message "INFO" "Deployment to production completed successfully!"
 log_message "INFO" "=========================================="
 log_message "INFO" "Application running on port $PORT"
-log_message "INFO" "Access via: http://$SERVER_IP:$PORT/hummiguard-ai"
+log_message "INFO" "Access via: https://$SERVER_IP/hummiguard-ai"
 log_message "INFO" ""
-log_message "INFO" "IMPORTANT: Add nginx configuration to proxy /hummiguard-ai"
-log_message "INFO" "See DEPLOYMENT.md for nginx setup instructions"
-log_message "INFO" ""
-log_message "INFO" "Check logs: ssh root@$SERVER_IP 'journalctl -u $PROJECT_NAME -f'"
-log_message "INFO" "Restart: ssh root@$SERVER_IP 'systemctl restart $PROJECT_NAME'"
+log_message "INFO" "Check logs: ssh root@$SERVER_IP 'pm2 logs $PROJECT_NAME'"
+log_message "INFO" "Restart: ssh root@$SERVER_IP 'pm2 restart $PROJECT_NAME'"
