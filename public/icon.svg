@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#db2777"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#bg)"/>
+  <!-- Hummingbird silhouette (simplified) -->
+  <g transform="translate(100, 120) scale(2.5)">
+    <!-- Body -->
+    <ellipse cx="60" cy="50" rx="35" ry="25" fill="white"/>
+    <!-- Head -->
+    <circle cx="95" cy="40" r="18" fill="white"/>
+    <!-- Long beak -->
+    <path d="M 110 38 L 145 35 L 110 42 Z" fill="white"/>
+    <!-- Wing -->
+    <path d="M 45 45 Q 20 20 25 70 Q 40 55 45 45" fill="rgba(255,255,255,0.8)"/>
+    <!-- Tail -->
+    <path d="M 25 50 L 5 65 L 10 50 L 5 35 L 25 50" fill="white"/>
+    <!-- Eye -->
+    <circle cx="100" cy="38" r="4" fill="#7c3aed"/>
+  </g>
+  <!-- AI text at bottom -->
+  <text x="256" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white">AI</text>
+</svg>
